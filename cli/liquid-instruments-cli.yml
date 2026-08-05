@@ -1,0 +1,113 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/cli/
+name: MokuCLI
+binary: mokucli
+summary: 'A first-party command-line utility for managing Moku hardware — device discovery,
+  MokuOS updates, instrument bitstream management, feature/plugin deployment, file transfer,
+  data streaming, licensing, cloud sign-in, and the offline Moku Compile toolchain. Since API
+  4.0.1 MokuCLI is required for all Python and MATLAB API connections, and it is how instrument
+  bitstreams are obtained.'
+install:
+- method: vendor download
+  url: https://liquidinstruments.com/software/utilities/
+  docs: https://apis.liquidinstruments.com/cli/getting-started/install.html
+  note: 'Must be installed in — or reachable from — the same environment as the moku Python
+    package.'
+verify: mokucli --help
+help:
+  global: mokucli --help
+  per_command: mokucli COMMAND --help
+commands:
+- name: instrument
+  docs: https://apis.liquidinstruments.com/cli/instrument.html
+  group: bitstreams
+  purpose: Download, upload and list instrument bitstreams.
+  example: mokucli instrument download 4.3.0
+- name: firmware
+  docs: https://apis.liquidinstruments.com/cli/firmware.html
+  group: device
+  purpose: Manage MokuOS firmware on a device.
+- name: feature
+  docs: https://apis.liquidinstruments.com/cli/feature.html
+  group: device
+  purpose: Deploy software features and plugins to a device (including the api-server feature
+    required by the REST API).
+  example: mokucli feature upload <moku> api-server
+- name: config
+  docs: https://apis.liquidinstruments.com/cli/config.html
+  group: device
+  purpose: Read and write device/CLI configuration.
+- name: cache
+  docs: https://apis.liquidinstruments.com/cli/cache.html
+  group: local
+  purpose: Manage the local bitstream/artifact cache.
+- name: command
+  docs: https://apis.liquidinstruments.com/cli/command.html
+  group: device
+  purpose: Send a direct command to a device.
+- name: convert
+  docs: https://apis.liquidinstruments.com/cli/convert.html
+  group: data
+  purpose: Convert Moku binary .li data files to CSV, MAT and other formats.
+- name: download
+  docs: https://apis.liquidinstruments.com/cli/download.html
+  group: data
+  purpose: Download files from a device.
+- name: list
+  docs: https://apis.liquidinstruments.com/cli/list.html
+  group: discovery
+  purpose: Discover Moku devices on the network (mDNS) and report their addresses.
+  example: mokucli list
+- name: files
+  docs: https://apis.liquidinstruments.com/cli/files.html
+  group: data
+  purpose: Manage files stored on a device.
+- name: license
+  docs: https://apis.liquidinstruments.com/cli/license.html
+  group: account
+  purpose: Manage instrument licences on a device.
+- name: proxy
+  docs: https://apis.liquidinstruments.com/cli/proxy.html
+  group: network
+  purpose: Create a network proxy to a device.
+- name: stream
+  docs: https://apis.liquidinstruments.com/cli/stream.html
+  group: data
+  purpose: Stream acquisition data from a device in real time.
+- name: login
+  docs: https://apis.liquidinstruments.com/cli/login.html
+  group: account
+  purpose: 'Interactive OAuth 2.0 / OIDC sign-in against auth.liquidinstruments.com (authorization
+    code + PKCE S256); mints a short-lived Security Token Service credential and caches it locally.'
+- name: logout
+  docs: https://apis.liquidinstruments.com/cli/logout.html
+  group: account
+  purpose: Clear the cached credentials.
+- name: mc
+  docs: https://apis.liquidinstruments.com/cli/mc.html
+  group: toolchain
+  purpose: Offline Moku Compile toolchain — build custom FPGA instruments on-premises instead of
+    in the cloud.
+flows:
+- name: First-time API setup
+  steps:
+  - pip install moku
+  - Install MokuCLI from the Utilities page
+  - mokucli --help
+  - mokucli instrument download 4.3.0
+  - mokucli list
+  docs: https://apis.liquidinstruments.com/api/getting-started/starting-python.html
+- name: Enable the REST API server on a device
+  steps:
+  - mokucli feature upload <moku> api-server
+  source: 'Published client error message for HTTP 502 in pypi:moku 4.3.0.1'
+- name: On-premises Moku Compile build
+  docs: https://apis.liquidinstruments.com/cli/getting-started/on-prem.html
+- name: Advanced network and device administration
+  docs: https://apis.liquidinstruments.com/cli/getting-started/advanced.html
+gaps:
+- MokuCLI is not published to any general-purpose package registry (no Homebrew formula, npm,
+  PyPI or winget entry found) — it is a vendor download only, which makes CI/CD installation
+  awkward.
+- No published version number or changelog for MokuCLI itself, distinct from the API release train.

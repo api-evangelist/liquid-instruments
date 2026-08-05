@@ -1,0 +1,82 @@
+generated: '2026-08-04'
+method: derived
+source: https://auth.liquidinstruments.com/.well-known/openid-configuration
+also_derived_from:
+- https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+- 'pypi:moku 4.3.0.1'
+note: 'Liquid Instruments publishes no compliance/certification program that could be found on
+  its public surface (no trust centre, no SOC 2 / ISO 27001 / FedRAMP claim, no security.txt).
+  This file therefore asserts only technical standards conformance observed on live endpoints or
+  in published documentation — it deliberately does NOT carry a Compliance pointer.'
+standards:
+- id: openid-connect-discovery-1.0
+  conforms: true
+  evidence: 'https://auth.liquidinstruments.com/.well-known/openid-configuration returns HTTP 200
+    application/json with issuer, authorization_endpoint, token_endpoint, userinfo_endpoint,
+    jwks_uri, response_types_supported and subject_types_supported.'
+- id: oauth2
+  conforms: true
+  evidence: 'grant_types_supported includes authorization_code, client_credentials,
+    refresh_token, password and implicit.'
+- id: rfc7636-pkce
+  conforms: true
+  evidence: 'mokucli login is documented issuing code_challenge with
+    code_challenge_method=S256 (https://apis.liquidinstruments.com/cli/login.html).'
+  caveat: PKCE support is not advertised in the discovery document
+    (code_challenge_methods_supported is absent).
+- id: rfc8628-device-authorization-grant
+  conforms: true
+  evidence: 'device_authorization_endpoint = https://auth.liquidinstruments.com/oauth2/device_authorize
+    and grant_types_supported includes urn:ietf:params:oauth:grant-type:device_code.'
+- id: rfc7517-jwks
+  conforms: true
+  evidence: https://auth.liquidinstruments.com/.well-known/jwks.json returns HTTP 200 with a keys array.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns HTTP 404; only OIDC discovery is served.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns HTTP 404 on every Liquid Instruments host probed.
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns HTTP 404.
+- id: openapi
+  conforms: false
+  evidence: 'No OpenAPI/Swagger document found. /openapi.json, /openapi.yaml and /swagger.json
+    return 404 on apis.liquidinstruments.com, liquidinstruments.com, knowledge., forum. and
+    compile.; the device API host is customer-local and undocumented as serving a spec.'
+- id: asyncapi
+  conforms: false
+  evidence: No event, webhook or streaming spec published; there is no callback surface.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are returned as HTTP 200 with a custom {success, code, messages, data}
+    envelope, not application/problem+json.'
+- id: rest-uniform-interface
+  conforms: false
+  evidence: 'Action-oriented RPC over POST (/api/<group>/<action>); HTTP methods do not carry
+    semantics and application errors do not map to HTTP status codes.'
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support and no deprecation policy published.
+- id: mcp
+  conforms: false
+  evidence: No Model Context Protocol server published or discoverable.
+- id: a2a
+  conforms: false
+  evidence: '/.well-known/agent-card.json and /.well-known/agent.json return 404 on every host probed.'
+- id: llms-txt
+  conforms: false
+  evidence: /llms.txt returns 404 on every Liquid Instruments host probed.
+- id: rfc9116-vulnerability-disclosure
+  conforms: false
+  evidence: No security.txt, no disclosure page, no bug-bounty program found.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: 'No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or GDPR certification page was found.
+    trust.liquidinstruments.com and security.liquidinstruments.com do not resolve;
+    liquidinstruments.com/security returns 404.'
+x-evidence:
+  probed: '2026-08-04'

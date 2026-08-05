@@ -1,0 +1,85 @@
+generated: '2026-08-04'
+method: probed
+source: https://auth.liquidinstruments.com/.well-known/openid-configuration
+docs: https://apis.liquidinstruments.com/cli/login.html
+note: 'There is no OpenAPI declaring oauth2 securitySchemes for Liquid Instruments, so
+  derive-oauth-scopes.py has nothing to read. These scopes were taken verbatim from the
+  live OpenID Connect discovery document at auth.liquidinstruments.com (HTTP 200,
+  application/json, fetched 2026-08-04). Only the standard OIDC scope set is advertised
+  — no product- or resource-specific scopes are published. Liquid Instruments does not
+  publish a scopes/permissions reference page.'
+schemes:
+- name: LiquidInstrumentsOIDC
+  type: openIdConnect
+  issuer: https://auth.liquidinstruments.com
+  source: https://auth.liquidinstruments.com/.well-known/openid-configuration
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://auth.liquidinstruments.com/oauth2/authorize
+    tokenUrl: https://auth.liquidinstruments.com/oauth2/token
+    pkce: S256
+  - flow: clientCredentials
+    tokenUrl: https://auth.liquidinstruments.com/oauth2/token
+  - flow: deviceCode
+    deviceAuthorizationUrl: https://auth.liquidinstruments.com/oauth2/device_authorize
+    tokenUrl: https://auth.liquidinstruments.com/oauth2/token
+  - flow: implicit
+    authorizationUrl: https://auth.liquidinstruments.com/oauth2/authorize
+  - flow: password
+    tokenUrl: https://auth.liquidinstruments.com/oauth2/token
+scopes:
+- scope: openid
+  description: Standard OpenID Connect scope — requests an ID token identifying the end user.
+  standard: true
+  sources: [https://auth.liquidinstruments.com/.well-known/openid-configuration]
+- scope: offline_access
+  description: Requests a refresh token so the client can obtain new access tokens without
+    the user being present.
+  standard: true
+  sources: [https://auth.liquidinstruments.com/.well-known/openid-configuration]
+- scope: email
+  description: Releases the email and email_verified claims.
+  standard: true
+  sources: [https://auth.liquidinstruments.com/.well-known/openid-configuration]
+- scope: phone
+  description: Releases the phone_number claim.
+  standard: true
+  sources: [https://auth.liquidinstruments.com/.well-known/openid-configuration]
+- scope: profile
+  description: Releases the profile claims (name, given_name, family_name, middle_name,
+    preferred_username, picture, birthdate).
+  standard: true
+  sources: [https://auth.liquidinstruments.com/.well-known/openid-configuration]
+claims_supported:
+- applicationId
+- at_hash
+- aud
+- authenticationType
+- birthdate
+- c_hash
+- email
+- email_verified
+- exp
+- family_name
+- given_name
+- iat
+- iss
+- jti
+- middle_name
+- name
+- nbf
+- nonce
+- phone_number
+- picture
+- preferred_username
+- roles
+- sub
+gaps:
+- 'No resource-specific scopes are advertised — nothing describes what a token may do
+  against Moku Cloud Compile, licensing, or device features. Authorization appears to be
+  carried in a "roles" claim rather than in scopes.'
+x-evidence:
+  fetched: '2026-08-04'
+  url: https://auth.liquidinstruments.com/.well-known/openid-configuration
+  http_status: 200
+  content_type: application/json

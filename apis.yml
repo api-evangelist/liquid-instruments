@@ -1,23 +1,172 @@
 aid: liquid-instruments
 name: Liquid Instruments
-description: 'Liquid Instruments is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+description: 'Liquid Instruments builds Moku, a family of software-defined, FPGA-reconfigurable
+  test-and-measurement hardware platforms (Moku:Go, Moku:Lab, Moku:Pro, Moku:Delta)
+  that replace a bench of traditional instruments — oscilloscope, spectrum analyzer,
+  waveform generator, lock-in amplifier, PID controller, phasemeter, laser lock box,
+  logic analyzer, FIR/digital filter box, frequency response analyzer and more — with
+  one reconfigurable device. Every Moku exposes a RESTful HTTP control API served by
+  the device itself on the local network, wrapped by first-party Python, MATLAB and
+  LabVIEW client libraries plus the MokuCLI command-line utility, and the company
+  runs a hosted OpenID Connect identity service for Moku Cloud Compile and licensed
+  feature access. The company was founded out of gravitational-wave detection research
+  and is headquartered in San Diego, California with offices in Canberra and Melbourne,
+  Australia.'
+image: https://liquidinstruments.com/wp-content/uploads/2022/01/liquid-instruments-logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/liquid-instruments/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-08-04'
 modified: '2026-08-04'
 tags:
 - Company
-apis: []
+- Test and Measurement
+- Instrumentation
+- Hardware
+- Oscilloscope
+- Spectrum Analyzer
+- Data Acquisition
+- FPGA
+- Photonics
+- Scientific Instruments
+- Electronics
+- Laboratory
+apis:
+- name: Moku REST API
+  description: 'The Moku Scripting API is a RESTful HTTP interface served by the Moku
+    device itself. A client first POSTs an empty JSON object to moku/claim_ownership
+    to mint a Moku-Client-Key, then POSTs JSON parameter objects to
+    /api/<instrument-or-group>/<action> for every subsequent operation. Responses are
+    a uniform envelope of success, code, messages and data. Because the API server runs
+    on the customer''s own hardware, there is no vendor-hosted base URL — the base URL
+    is the device''s IP address on the local network (IPv4, or a bracketed IPv6
+    link-local address over USB).'
+  humanURL: https://apis.liquidinstruments.com/api/
+  baseURL: http://{device_ip}/api
+  x-base-url-note: 'Device-local API. The published URL form is http://<ip>/api/<instrument>/<action>
+    (source: https://apis.liquidinstruments.com/api/getting-started/starting-curl.html).
+    There is no vendor-hosted production host for this API; each Moku serves its own.'
+  tags:
+  - Test and Measurement
+  - Instrumentation
+  - Device Control
+  properties:
+  - type: Documentation
+    url: https://apis.liquidinstruments.com/api/
+  - type: APIReference
+    url: https://apis.liquidinstruments.com/api/reference/
+  - type: GettingStarted
+    url: https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+  - type: Authentication
+    url: authentication/liquid-instruments-authentication.yml
+  - type: ErrorCatalog
+    url: errors/liquid-instruments-error-codes.yml
+  - type: Conventions
+    url: conventions/liquid-instruments-conventions.yml
+  - type: DataModel
+    url: data-model/liquid-instruments-data-model.yml
+  - type: Code Samples
+    url: https://apis.liquidinstruments.com/api/moku-examples/
+- name: Liquid Instruments Identity (OAuth 2.0 / OpenID Connect)
+  description: 'The hosted identity service behind mokucli login, Moku Cloud Compile and
+    licensed feature access. It publishes a full OpenID Connect discovery document at
+    https://auth.liquidinstruments.com/.well-known/openid-configuration, advertising the
+    authorization, token, userinfo, device-authorization, logout and JWKS endpoints, the
+    authorization_code / client_credentials / refresh_token / password / implicit /
+    device_code grant types, and the openid, offline_access, email, phone and profile
+    scopes. mokucli signs in with the authorization code flow plus PKCE (S256) and then
+    mints a short-lived Security Token Service credential that is cached locally.'
+  humanURL: https://apis.liquidinstruments.com/cli/login.html
+  baseURL: https://auth.liquidinstruments.com
+  tags:
+  - Authentication
+  - OpenID Connect
+  - OAuth
+  properties:
+  - type: OpenIDConnect
+    url: https://auth.liquidinstruments.com/.well-known/openid-configuration
+  - type: Documentation
+    url: https://apis.liquidinstruments.com/cli/login.html
+  - type: OAuthScopes
+    url: scopes/liquid-instruments-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/liquid-instruments-domain-security.yml
 - type: Website
-  url: https://forgeglobal.com/liquid-instruments_stock/
+  url: https://liquidinstruments.com/
+- type: DeveloperPortal
+  url: https://apis.liquidinstruments.com/
+- type: Documentation
+  url: https://apis.liquidinstruments.com/
+- type: APIReference
+  url: https://apis.liquidinstruments.com/api/reference/
+- type: GettingStarted
+  url: https://apis.liquidinstruments.com/api/getting-started/
+- type: Support
+  url: https://liquidinstruments.com/support/contact/
+- type: HelpCenter
+  url: https://knowledge.liquidinstruments.com/
+- type: Community
+  url: https://forum.liquidinstruments.com/
+- type: Blog
+  url: https://liquidinstruments.com/blog/
+- type: BlogRSS
+  url: https://liquidinstruments.com/feed/
+- type: GitHubOrganization
+  url: https://github.com/liquidinstruments
+- type: SourceCode
+  url: https://github.com/liquidinstruments/moku-examples
+- type: Code Samples
+  url: https://github.com/liquidinstruments/moku-examples
+- type: Pricing
+  url: https://store.liquidinstruments.com/
+- type: SignUp
+  url: https://liquidinstruments.com/my-account/
+- type: TermsOfService
+  url: https://liquidinstruments.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://liquidinstruments.com/privacy
+- type: AcceptableUsePolicy
+  url: https://liquidinstruments.com/terms/acceptable-use-policy
+- type: ChangeLog
+  url: https://apis.liquidinstruments.com/api/changelog/
+- type: ChangeLog
+  name: Moku API changelog (captured)
+  url: changelog/liquid-instruments-changelog.yml
+- type: Packages
+  url: packages/liquid-instruments-packages.yml
+- type: SDKs
+  url: packages/liquid-instruments-packages.yml
+- type: CLI
+  url: cli/liquid-instruments-cli.yml
+- type: Authentication
+  url: authentication/liquid-instruments-authentication.yml
+- type: OAuthScopes
+  url: scopes/liquid-instruments-scopes.yml
+- type: WellKnown
+  url: well-known/liquid-instruments-well-known.yml
+- type: Conformance
+  url: conformance/liquid-instruments-conformance.yml
+- type: ErrorCatalog
+  url: errors/liquid-instruments-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/liquid-instruments-lifecycle.yml
+- type: Conventions
+  url: conventions/liquid-instruments-conventions.yml
+- type: DataModel
+  url: data-model/liquid-instruments-data-model.yml
+- type: LLMsTxt
+  url: llms/liquid-instruments-llms.txt
+x-enrichment:
+  date: '2026-08-04'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

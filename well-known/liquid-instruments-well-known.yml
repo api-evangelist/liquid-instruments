@@ -1,0 +1,82 @@
+generated: '2026-08-04'
+method: probed
+source: live probe of every Liquid Instruments host found in apis.yml
+hosts_probed:
+- auth.liquidinstruments.com
+- apis.liquidinstruments.com
+- liquidinstruments.com
+- www.liquidinstruments.com
+- knowledge.liquidinstruments.com
+- forum.liquidinstruments.com
+- compile.liquidinstruments.com
+documents:
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/openid-configuration
+  standard: OpenID Connect Discovery 1.0
+  status: 200
+  content_type: application/json
+  file: liquid-instruments-openid-configuration.json
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/jwks.json
+  standard: RFC 7517 JSON Web Key Set
+  status: 200
+  content_type: application/json
+  file: liquid-instruments-jwks.json
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/oauth-authorization-server
+  standard: RFC 8414
+  status: 404
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/security.txt
+  standard: RFC 9116
+  status: 404
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://auth.liquidinstruments.com
+  path: /.well-known/agent.json
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/security.txt
+  standard: RFC 9116
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/api-catalog
+  standard: RFC 9727
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://liquidinstruments.com
+  path: /.well-known/agent.json
+  status: 404
+- host: https://apis.liquidinstruments.com
+  path: /.well-known/security.txt
+  status: 404
+- host: https://apis.liquidinstruments.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: https://apis.liquidinstruments.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://apis.liquidinstruments.com
+  path: /.well-known/agent.json
+  status: 404
+summary:
+  found: 2
+  missing:
+  - security.txt (RFC 9116) — absent on every host probed
+  - api-catalog (RFC 9727) — absent
+  - oauth-authorization-server (RFC 8414) — absent; OIDC discovery is published instead
+  - agent-card.json / agent.json (A2A) — absent on every host
+  - ai-plugin.json — absent
+  - llms.txt — absent on every host (404 on apis., www., knowledge., forum., compile.)
+x-evidence:
+  fetched: '2026-08-04'
+  method: HTTPS GET, redirects followed, status code recorded per path

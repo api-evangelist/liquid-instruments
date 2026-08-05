@@ -1,0 +1,74 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/api/changelog/
+versioning:
+  scheme: paired client-library / MokuOS firmware versioning (semver-shaped, no date or header
+    negotiation)
+  current: 4.3.0
+  current_python_package: 4.3.0.1
+  docs: https://apis.liquidinstruments.com/api/changelog/
+  note: 'The client library, the MokuOS firmware, and the downloadable instrument bitstreams are
+    versioned together. The API path itself is unversioned (/api/…), except for a /api/v2/
+    prefix used by hardware-state and chunked-data operations. Version skew between client and
+    device surfaces as HTTP 404 / OperationNotFound, or IncompatiblePackageException.'
+  compatibility_contract: 'Documented in prose only: "Please make sure your Python client is
+    compatible with the MokuOS version running on your device."'
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: 'No deprecation policy, no Sunset/Deprecation header support (RFC 8594), and no
+    published support window for older MokuOS/API versions. Breaking changes are announced only
+    as changelog lines.'
+  observed_removals_and_deprecations:
+  - change: moku_download function removed; use MokuCLI instead
+    release: 4.0.1
+  - change: MokuCLI became required for all API connections
+    release: 4.0.1
+    breaking: true
+  - change: force_connect parameter deprecated in the Python client
+    release: 3.3.1+
+  - change: 'Logic Analyzer changed from one-indexed pins to zero-indexed bits'
+    release: 4.2.1
+    breaking: true
+  - change: 'Trigger level parameters now default to None (hardware threshold voltage when
+      source is External, otherwise 0 V)'
+    release: 4.2.2
+    breaking: true
+status_page:
+  url: https://status.liquidinstruments.com/
+  reachable: false
+  probe:
+    dns: CNAME -> stats.uptimerobot.com
+    http: 308 redirect to https
+    https: TLS handshake failure (tlsv1 alert internal error) — no certificate served for this
+      hostname
+    probed: '2026-08-04'
+  note: 'A status hostname is provisioned and pointed at UptimeRobot, but TLS is broken so the
+    page cannot be loaded by any browser or agent. Because there is no working status page, this
+    repo deliberately does NOT carry a StatusPage pointer. This is a concrete, cheap fix for
+    Liquid Instruments: finish the custom-domain certificate on the UptimeRobot status page.'
+sla:
+  url: null
+  uptime_target: null
+  note: 'No API SLA is published. The device API runs on customer-owned hardware, so uptime is
+    the customer''s; the hosted surfaces (auth.liquidinstruments.com, Moku Cloud Compile) carry
+    no published availability commitment.'
+support:
+  contact: https://liquidinstruments.com/support/contact/
+  email: support@liquidinstruments.com
+  knowledge_base: https://knowledge.liquidinstruments.com/
+  community_forum: https://forum.liquidinstruments.com/
+  warranty: https://liquidinstruments.com/support/warranty-repairs-and-service/
+  hardware_warranty: one-year limited warranty; typical repair turnaround 10 business days
+maturity:
+  stage: generally available
+  first_party_clients: [python, matlab, labview]
+  cli: MokuCLI
+deprecated_operations: []
+gaps:
+- No published deprecation or version-support policy.
+- Status page hostname exists but does not serve over HTTPS.
+- No SLA or availability commitment for the hosted identity / Cloud Compile services.
+- Changelog entries carry no dates.

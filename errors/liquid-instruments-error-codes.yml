@@ -1,0 +1,121 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+derived_from: 'pypi:moku 4.3.0.1 — moku/session.py (RequestSession.resolve / _handle_error)
+  and moku/exceptions.py'
+format: custom-envelope
+note: 'The Moku REST API does NOT use RFC 9457 problem+json. It returns HTTP 200 with a
+  uniform JSON envelope and signals failure inside the body. Only a handful of transport
+  failures surface as non-200 HTTP status codes. The envelope shape is published in the
+  cURL/REST getting-started page; the machine-readable code strings and their meanings
+  were read out of the first-party Python client, which is the only place they are
+  enumerated.'
+envelope:
+  transport: HTTP 200 on both success and application-level failure
+  fields:
+  - name: success
+    type: boolean
+    description: Whether the command was accepted.
+  - name: code
+    type: string
+    description: Machine-readable error code, present when success is false.
+  - name: messages
+    type: string|array
+    description: 'Human-readable detail. On success this carries non-fatal warnings, which
+      the Python client prints as "Warning: ...".'
+  - name: data
+    type: object|string
+    description: The return value, present when success is true.
+application_errors:
+- code: NO_PLATFORM_BIT_STREAM
+  title: Platform bitstream not found
+  remediation: Download the platform/instrument bitstreams matching the MokuOS version
+    with `mokucli instrument download <mokuos-version>`.
+  client_exception: moku.exceptions.NoPlatformBitstream
+- code: NO_BIT_STREAM
+  title: Instrument bitstream not found
+  remediation: Download the instrument bitstreams for the running MokuOS version with
+    `mokucli instrument download <mokuos-version>`.
+  client_exception: moku.exceptions.NoInstrumentBitstream
+- code: INVALID_PARAM
+  title: Invalid parameter type or value for this operation
+  remediation: Check the parameter types and allowed ranges in the instrument reference.
+  client_exception: moku.exceptions.InvalidParameterException
+- code: INVALID_REQUEST
+  title: Invalid instrument configuration requested
+  remediation: The requested combination of settings is not achievable on this platform or
+    in this instrument mode.
+  client_exception: moku.exceptions.InvalidRequestException
+- code: NETWORK_ERROR
+  title: Unexpected network error
+  remediation: Check the connection to the device; retry.
+  client_exception: moku.exceptions.NetworkError
+- code: UNEXPECTED_CHANGE
+  title: Configuration changed unexpectedly while the request was in flight
+  remediation: Another owner may hold the device, or a dependent setting was invalidated.
+    Re-read state and retry.
+  client_exception: moku.exceptions.UnexpectedChangeError
+- code: '*'
+  title: Unclassified device error
+  remediation: The messages field carries the detail; any code not listed above raises the
+    base exception.
+  client_exception: moku.exceptions.MokuException
+http_status_errors:
+- status: 404
+  title: Method not found
+  detail: 'Published client message: "Method not found. Please make sure your Python client
+    is compatible with the MokuOS version running on your device."'
+  cause: Client/firmware version skew — the operation does not exist on this MokuOS build.
+  client_exception: moku.exceptions.OperationNotFound
+- status: 500
+  title: Device error
+  detail: The response body is raised verbatim.
+  client_exception: moku.exceptions.MokuException
+- status: 502
+  title: API server not installed
+  detail: 'Published client message: "Can''t connect to the API server. Please check that
+    your Moku has an API server installed by running `mokucli feature upload <moku>
+    api-server`."'
+  remediation: 'Run `mokucli feature upload <moku> api-server`.'
+  client_exception: moku.exceptions.MokuException
+- status: 504
+  title: Timeout while waiting for a response
+  client_exception: moku.exceptions.MokuException
+client_exceptions:
+- name: MokuException
+  description: Base class for all Moku errors.
+- name: StreamException
+  description: Error occurred while streaming data.
+- name: MokuNotFound
+  description: Unable to find a Moku with the given name/serial.
+- name: IncompatibleMokuException
+  description: Device is incompatible with this client.
+- name: IncompatiblePackageException
+  description: Client package version is older than the device it is talking to.
+- name: NoPlatformBitstream
+  description: Cannot find platform bitstream.
+- name: NoInstrumentBitstream
+  description: Cannot find instrument bitstream.
+- name: NetworkError
+  description: Unexpected network error occurred.
+- name: DeployException
+  description: Couldn't start instrument. Moku may not be licensed to use that instrument.
+- name: OperationNotFound
+  description: Couldn't find valid function. May be due to incompatible versions.
+- name: InvalidParameterException
+  description: Invalid parameter type or value for this operation.
+- name: InvalidRequestException
+  description: A request for an invalid instrument configuration has been made.
+- name: UnexpectedChangeError
+  description: A request has been made for data but none will be generated.
+- name: NoDataException
+  description: A request has been made for data but none will be generated.
+- name: InvalidParameterRange
+  description: Parameter value is not one of the allowed values.
+gaps:
+- 'No public error reference page. The code strings are only discoverable by reading the
+  client source — Liquid Instruments should publish the error-code registry on
+  apis.liquidinstruments.com.'
+- 'Application errors are returned with HTTP 200, so generic HTTP clients and agents
+  cannot detect failure without parsing the envelope.'
+- 'No RFC 9457 application/problem+json representation.'

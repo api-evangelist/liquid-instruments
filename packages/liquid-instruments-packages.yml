@@ -1,0 +1,65 @@
+generated: '2026-08-04'
+method: searched
+source: https://liquidinstruments.com/products/apis/
+notes: 'Registries probed 2026-08-04: PyPI (hit), npm (no first-party package — the npm
+  name "moku" is an unrelated 0.1.0 placeholder published as "Coming soon", NOT Liquid
+  Instruments), Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist, crates.io (no
+  first-party packages found). MATLAB and LabVIEW packages are distributed from the
+  vendor site / MATLAB File Exchange rather than a general-purpose registry.'
+packages:
+- language: python
+  registry: pypi
+  name: moku
+  version_observed: 4.3.0.1
+  url: https://pypi.org/project/moku/
+  install: pip install moku
+  license: MIT
+  requires_python: '>=3.8'
+  summary: Python scripting interface to the Liquid Instruments Moku hardware
+  docs: https://apis.liquidinstruments.com/api/getting-started/starting-python.html
+  official: true
+  x-evidence:
+    fetched: '2026-08-04'
+    url: https://pypi.org/pypi/moku/json
+    http_status: 200
+    author_email: info@liquidinstruments.com
+    project_urls:
+      Documentation: https://apis.liquidinstruments.com
+      Homepage: https://liquidinstruments.com
+      Issues: https://www.liquidinstruments.com/support/contact/
+- language: matlab
+  registry: mathworks-file-exchange
+  name: moku-MATLAB
+  url: https://www.mathworks.com/matlabcentral/fileexchange/94160-moku-matlab
+  install: Download the .tlbx toolbox and open it in MATLAB, or install from the MATLAB Add-On Manager
+  docs: https://apis.liquidinstruments.com/api/getting-started/starting-matlab.html
+  vendor_download: https://liquidinstruments.com/products/apis/matlab-api/
+  official: true
+- language: labview
+  registry: vendor
+  name: Moku LabVIEW API
+  url: https://liquidinstruments.com/products/apis/labview-api/
+  install: Download the LabVIEW API package from the Liquid Instruments website
+  docs: https://apis.liquidinstruments.com/api/getting-started/
+  official: true
+- language: binary
+  registry: vendor
+  name: MokuCLI
+  url: https://liquidinstruments.com/software/utilities/
+  install: Download MokuCLI from the Liquid Instruments Utilities page
+  docs: https://apis.liquidinstruments.com/cli/
+  official: true
+  note: 'Required by the Python and MATLAB APIs since API 4.0.1 — "MokuCLI now required
+    for all API connections". Also supplies instrument bitstream download
+    (mokucli instrument download <mokuos-version>). Its command surface is captured in
+    cli/liquid-instruments-cli.yml.'
+code_samples:
+- name: moku-examples
+  url: https://github.com/liquidinstruments/moku-examples
+  license: MIT
+  languages: [python, matlab, vhdl, cpp, csharp, java, go, rust, javascript, perl]
+  note: 'First-party example repository. other-language-api/ carries raw-REST demo clients
+    (MokuDemo.cpp, MokuDemo.cs, MokuDemo.java, go.go, main.rs, moku-node.js,
+    moku-perl.perl) — these are examples of calling the device REST API directly, not
+    packaged SDKs, so they are not listed as packages above.'
+  official: true

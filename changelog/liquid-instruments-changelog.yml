@@ -1,0 +1,63 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/api/changelog/
+scheme: semver-shaped release numbering, shared across the Python, MATLAB and LabVIEW APIs and
+  the MokuOS firmware
+current_version: 4.3.0
+current_python_package: 4.3.0.1
+dated: false
+note: 'The published changelog lists release numbers and change bullets but carries no release
+  dates, so entries below record version and content only. Recent window captured 2026-08-04;
+  the live page is the source of truth.'
+entries:
+- version: 4.3.0
+  date: null
+  breaking: []
+  additions:
+  - GenInst support (Python, MATLAB, LabVIEW)
+  - 'Moku:Delta support for all instruments (LabVIEW)'
+  - 'MATLAB: Custom Instrument and GenInst now support .bar and unzipped .tar bitstream formats'
+- version: 4.2.2
+  date: null
+  breaking:
+  - Trigger level parameters now default to None; the hardware threshold voltage is used when
+    the source is External, otherwise 0 V
+  - 'Laser Lock Box: signal and output in set_output now default to None'
+  additions:
+  - 'LabVIEW: supports MokuOS 4.2.1 (bug fixes, no new features)'
+- version: 4.2.1
+  date: null
+  breaking:
+  - 'Logic Analyzer: changed from one-indexed pins to zero-indexed bits'
+  additions:
+  - '6 GHz bandwidth option for Moku:Delta set_frontend'
+  - 'Moku:Delta supports 5-slot Multi-instrument Mode'
+  - CustomInstrumentPlus support
+  - 'Gigabit Streamer: start_sending gains mode, control_channel and threshold parameters'
+  fixes:
+  - Multiple bug fixes across instruments
+- version: 4.1.2
+  date: null
+  breaking: []
+  additions:
+  - reset_receive_counters function (Gigabit Streamer)
+  - External option for set_trigger source (Laser Lock Box)
+  fixes:
+  - Improved error messaging across all instruments
+- version: 4.1.1
+  date: null
+  breaking: []
+  additions:
+  - GigabitStreamer and GigabitStreamerPlus support (Moku:Delta only)
+  - Neural Network support extended to Moku:Go and Moku:Lab (3-slot)
+- version: 4.0.1
+  date: null
+  breaking:
+  - MokuCLI is now required for all API connections
+  - moku_download function removed; use MokuCLI instead
+  additions:
+  - 'Moku:Delta support'
+gaps:
+- Changelog entries are undated, so consumers cannot tell how old a release is or reason about
+  a support window.
+- No RSS/Atom or JSON feed for the changelog.

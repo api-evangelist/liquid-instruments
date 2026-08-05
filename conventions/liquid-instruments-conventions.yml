@@ -1,0 +1,107 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+derived_from: 'pypi:moku 4.3.0.1 (moku/session.py, moku/__init__.py, moku/instruments/*)'
+scope: Moku REST API (device-local) unless otherwise noted
+transport:
+  protocol: HTTP/1.1 over plain HTTP on the local network (no TLS on the device)
+  base_url_form: http://<ip>/api/<group>/<action>
+  v2_base_url_form: http://<ip>/api/v2/<location>
+  address_forms:
+  - IPv4, e.g. http://192.168.1.123/api/...
+  - IPv6 link-local over USB, bracketed, e.g. http://[fe80::7269:79ff:feb9:0000%250]/api/...
+  discovery: mDNS/DNS-SD; `mokucli list` enumerates Mokus on the network
+rpc_style:
+  shape: action-oriented RPC over HTTP, not resource REST
+  method: 'POST for every action, including reads. GET is used only for a small number of
+    accessors and for file download; DELETE is used for file deletion.'
+  request_body: 'A JSON object carrying the action parameters. Actions that take no
+    parameters must still be sent an empty object {}.'
+  content_type: application/json
+  groups: 'The path segment after /api/ is the operation group: `moku` for device-level
+    operations, an instrument name (oscilloscope, awg, fra, lockinamp, …) for instrument
+    operations, and `slot<N>/<instrument>` when running in Multi-instrument Mode.'
+authentication:
+  style: session client key
+  header: Moku-Client-Key
+  acquire: POST {} to /api/moku/claim_ownership — key returned in the Moku-Client-Key response header
+  release: POST {} to /api/moku/relinquish_ownership
+  concurrency: 'One owner at a time. The client libraries expose force_connect and
+    ignore_busy to take ownership from another session.'
+  see: authentication/liquid-instruments-authentication.yml
+response_envelope:
+  status: HTTP 200 for both success and application-level failure
+  fields: [success, code, messages, data]
+  success_path: data
+  warning_path: messages (non-fatal warnings are returned alongside a successful response)
+  error_path: code + messages
+  see: errors/liquid-instruments-error-codes.yml
+  quirk: 'Numeric payloads may contain bare nan/inf tokens that are not valid JSON; the
+    first-party Python client rewrites them to strings before parsing.'
+idempotency:
+  supported: false
+  note: 'No idempotency key, no request-deduplication contract, and no documented retry
+    semantics. Setter actions (set_frontend, set_output, …) are naturally idempotent in
+    effect because they assign absolute state rather than applying a delta, but the API
+    publishes no idempotency guarantee, so this repo deliberately does NOT carry an
+    Idempotency pointer.'
+pagination:
+  supported: false
+  note: 'Not applicable. Bulk data is retrieved as whole acquisitions via get_data, or
+    chunked through the v2 get_chunk streaming endpoint, not through paged collections.'
+field_selection:
+  supported: false
+metadata:
+  supported: false
+request_tracing:
+  request_id_header: none observed
+  note: No correlation/request-id header is documented or sent by the first-party client.
+rate_limiting:
+  documented: false
+  note: 'No rate-limit headers, quotas, or throttling contract are published. The API is
+    served by the customer''s own device, so limits are physical (device throughput and
+    acquisition timing) rather than contractual.'
+timeouts:
+  connect_timeout_default_seconds: 15
+  read_timeout_default_seconds: 30
+  note: 'Configurable per instrument object (connect_timeout / read_timeout) and per call
+    for get_data, which extends the read timeout by its own timeout parameter.'
+versioning:
+  scheme: paired client/firmware versioning
+  current_api_package: 4.3.0.1 (PyPI moku)
+  current_documented_release: 4.3.0
+  mechanism: 'The client library version must match the MokuOS version running on the
+    device; instrument bitstreams are downloaded per MokuOS version with
+    `mokucli instrument download <version>`. A mismatch surfaces as HTTP 404
+    (OperationNotFound) or IncompatiblePackageException.'
+  in_url: '/api/v2/ exists as a second path prefix for hardware-state and chunked-data
+    operations, alongside the unversioned /api/ path.'
+  see: lifecycle/liquid-instruments-lifecycle.yml
+file_transfer:
+  upload: POST binary body to /api/<group>/<action>
+  download: GET, streamed
+  delete: DELETE
+  note: 'MokuCLI supersedes the removed moku_download client function as of API 4.0.1.'
+streaming:
+  surfaces:
+  - name: data streaming
+    mechanism: 'mokucli stream / the client stream helper reads acquisition chunks via the
+      v2 get_chunk endpoint.'
+  - name: Gigabit Streamer
+    mechanism: 'Instrument (Moku:Delta) that streams acquisition data off the device over
+      Ethernet; configured through start_sending with mode, control_channel and threshold
+      parameters.'
+  note: 'No AsyncAPI, no webhooks, no publish/subscribe broker — Liquid Instruments has no
+    event-callback surface, so this repo carries no asyncapi/ artifact.'
+cross_links:
+  authentication: authentication/liquid-instruments-authentication.yml
+  errors: errors/liquid-instruments-error-codes.yml
+  lifecycle: lifecycle/liquid-instruments-lifecycle.yml
+  data_model: data-model/liquid-instruments-data-model.yml
+  scopes: scopes/liquid-instruments-scopes.yml
+gaps:
+- No machine-readable contract (no OpenAPI, GraphQL SDL, AsyncAPI or MCP manifest) for
+  either the device REST API or the hosted identity service.
+- Application errors ride on HTTP 200, which defeats generic HTTP error handling.
+- No request-id/correlation header, no rate-limit signalling, no idempotency contract.
+- The device API is served over plain HTTP with no TLS option documented.

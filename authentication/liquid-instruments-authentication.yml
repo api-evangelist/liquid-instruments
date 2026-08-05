@@ -1,0 +1,81 @@
+generated: '2026-08-04'
+method: searched
+source: https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+docs:
+- https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+- https://apis.liquidinstruments.com/cli/login.html
+- https://auth.liquidinstruments.com/.well-known/openid-configuration
+summary:
+  types: [apiKey, oauth2, openIdConnect]
+  api_key_in: [header]
+  oauth2_flows: [authorizationCode, clientCredentials, deviceCode, refreshToken, implicit, password]
+  note: 'Two distinct authentication surfaces. The device REST API uses a per-session
+    client key minted by the device itself; the hosted cloud services (MokuCLI login,
+    Moku Cloud Compile, licensed features) use OAuth 2.0 / OpenID Connect at
+    auth.liquidinstruments.com. There is no OpenAPI to derive from — this profile was
+    read from the published docs, the OIDC discovery document, and the first-party
+    Python client (PyPI moku 4.3.0.1).'
+schemes:
+- name: MokuClientKey
+  surface: Moku REST API (device-local)
+  type: apiKey
+  in: header
+  parameter_name: Moku-Client-Key
+  how_obtained: 'POST an empty JSON object {} to http://<ip>/api/moku/claim_ownership;
+    the client key is returned in the Moku-Client-Key response header and must be sent
+    on every subsequent request.'
+  released_by: 'POST {} to http://<ip>/api/moku/relinquish_ownership'
+  scope: session — a Moku serves one owner at a time; force_connect / ignore_but overrides
+    exist in the client libraries
+  transport: HTTP (plain) on the local network — the device does not serve TLS
+  sources:
+  - https://apis.liquidinstruments.com/api/getting-started/starting-curl.html
+  - 'pypi:moku 4.3.0.1 moku/session.py (sk_name = "Moku-Client-Key")'
+- name: LiquidInstrumentsOIDC
+  surface: Liquid Instruments Identity (hosted)
+  type: openIdConnect
+  openIdConnectUrl: https://auth.liquidinstruments.com/.well-known/openid-configuration
+  issuer: https://auth.liquidinstruments.com
+  endpoints:
+    authorization: https://auth.liquidinstruments.com/oauth2/authorize
+    token: https://auth.liquidinstruments.com/oauth2/token
+    userinfo: https://auth.liquidinstruments.com/oauth2/userinfo
+    device_authorization: https://auth.liquidinstruments.com/oauth2/device_authorize
+    end_session: https://auth.liquidinstruments.com/oauth2/logout
+    jwks: https://auth.liquidinstruments.com/.well-known/jwks.json
+  grant_types_supported:
+  - authorization_code
+  - password
+  - implicit
+  - refresh_token
+  - urn:ietf:params:oauth:grant-type:device_code
+  - client_credentials
+  response_types_supported: [code, id_token, token id_token]
+  response_modes_supported: [form_post, fragment, query]
+  token_endpoint_auth_methods_supported: [client_secret_basic, client_secret_post, none]
+  id_token_signing_alg_values_supported: [ES256, ES384, ES512, HS256, HS384, HS512, RS256, RS384, RS512]
+  subject_types_supported: [public]
+  pkce: 'S256 — mokucli login is documented issuing code_challenge + code_challenge_method=S256'
+  scopes: see scopes/liquid-instruments-scopes.yml
+  sources:
+  - https://auth.liquidinstruments.com/.well-known/openid-configuration
+  - https://apis.liquidinstruments.com/cli/login.html
+- name: MokuCLISecurityToken
+  surface: MokuCLI
+  type: http
+  scheme: bearer
+  description: 'After interactive OIDC sign-in, `mokucli login` mints a short-lived
+    Security Token Service (STS) credential and caches it locally for subsequent CLI
+    operations. `mokucli logout` clears it.'
+  sources:
+  - https://apis.liquidinstruments.com/cli/login.html
+gaps:
+- 'The device REST API is served over plain HTTP on the local network — no TLS, no
+  certificate, no HSTS. The client key is transmitted in clear text on the LAN.'
+- 'No published token lifetime, rotation, or revocation policy for the Moku-Client-Key.'
+- 'The PKCE requirement and the STS token TTL are described in prose, not in a
+  machine-readable security scheme (there is no OpenAPI for either surface).'
+x-evidence:
+  fetched: '2026-08-04'
+  openid_configuration_status: 200
+  jwks_status: 200

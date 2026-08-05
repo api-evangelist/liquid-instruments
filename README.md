@@ -42,5 +42,64 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Liquid Instruments is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/liquid-instruments_stock/
+Liquid Instruments builds **Moku** — software-defined, FPGA-reconfigurable test-and-measurement
+hardware (Moku:Go, Moku:Lab, Moku:Pro, Moku:Delta) that replaces a bench of traditional
+instruments with one device. Headquartered in San Diego, California, with offices in Canberra
+and Melbourne, Australia.
+
+## The API surface
+
+Two distinct surfaces were found and profiled (2026-08-04):
+
+1. **Moku REST API** — a device-local HTTP control API. Each Moku serves its own API at
+   `http://<device-ip>/api/<group>/<action>`; there is **no vendor-hosted base URL**. Every
+   action is a `POST` of a JSON parameter object, authenticated with a `Moku-Client-Key`
+   session key minted by `POST /api/moku/claim_ownership`. Responses always return HTTP 200
+   with a `{success, code, messages, data}` envelope — failure is signalled in the body, not
+   the status line. Wrapped by first-party Python (PyPI `moku`), MATLAB and LabVIEW clients
+   plus the **MokuCLI** utility.
+   Docs: https://apis.liquidinstruments.com/api/
+2. **Liquid Instruments Identity** — a hosted OAuth 2.0 / OpenID Connect service at
+   `auth.liquidinstruments.com` backing `mokucli login`, Moku Cloud Compile and licensing. It
+   publishes a full OIDC discovery document and JWKS.
+
+## What is in this repo
+
+| Directory | Artifact |
+|---|---|
+| `authentication/` | Both auth surfaces — device client key + hosted OIDC |
+| `scopes/` | OIDC scopes read verbatim from live discovery |
+| `well-known/` | `/.well-known/` probe index + the OIDC discovery and JWKS documents |
+| `conventions/` | Transport, RPC style, response envelope, versioning, timeouts, streaming |
+| `errors/` | The error-code registry and HTTP failure modes |
+| `data-model/` | 22 operation groups / 522 operations, derived from the first-party client |
+| `lifecycle/` | Versioning, observed deprecations, support, status-page finding |
+| `changelog/` | Recent API releases |
+| `cli/` | The MokuCLI command surface |
+| `packages/` | First-party client libraries and where they live |
+| `conformance/` | Standards conformance, asserted only where observed |
+| `security/` | Probed TLS/DNS posture |
+| `llms/` | A generated `llms.txt` for this provider |
+
+## Gaps worth closing (for Liquid Instruments)
+
+Everything below is a factual observation from the public surface on 2026-08-04, not a criticism
+of the hardware:
+
+- **No machine-readable contract.** No OpenAPI, Swagger, GraphQL SDL or AsyncAPI on any host.
+  The REST surface is real, uniform and well-suited to a spec — an OpenAPI generated from the
+  same source that produces the reference pages would make the whole surface agent-usable.
+- **Errors ride on HTTP 200.** Generic HTTP clients and agents cannot detect failure without
+  parsing the envelope, and the error-code strings (`INVALID_PARAM`, `NO_BIT_STREAM`, …) are
+  only enumerated inside the Python client source, not in the documentation.
+- **`status.liquidinstruments.com` is broken.** The hostname is provisioned and pointed at
+  UptimeRobot, but the TLS handshake fails, so no browser or agent can load it.
+- **No `security.txt`, no vulnerability-disclosure page, no trust centre**, and no published
+  compliance posture.
+- **No deprecation policy** despite shipping real breaking changes (zero-indexed Logic Analyzer
+  bits in 4.2.1, trigger-level defaults in 4.2.2, MokuCLI becoming mandatory in 4.0.1), and the
+  changelog carries no dates.
+- **No `llms.txt`, no MCP server, no A2A agent card.**
+
+Secondary-market listing that surfaced this company:
+https://forgeglobal.com/liquid-instruments_stock/

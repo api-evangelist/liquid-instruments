@@ -1,0 +1,27 @@
+generated: '2026-08-04'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: liquidinstruments.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Jan  7 23:59:59 2027 GMT
+  hsts: false
+- host: apis.liquidinstruments.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Mar 16 23:59:59 2027 GMT
+  hsts: false
+- host: auth.liquidinstruments.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 21 23:59:59 2026 GMT
+  hsts: true
+  hsts_max_age: 300
+domains:
+- domain: liquidinstruments.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none
