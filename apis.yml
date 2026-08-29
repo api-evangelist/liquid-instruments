@@ -12,6 +12,17 @@ description: 'Liquid Instruments builds Moku, a family of software-defined, FPGA
   feature access. The company was founded out of gravitational-wave detection research
   and is headquartered in San Diego, California with offices in Canberra and Melbourne,
   Australia.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://liquidinstruments.com/wp-content/uploads/2022/01/liquid-instruments-logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/liquid-instruments/refs/heads/main/apis.yml
 x-type: company
