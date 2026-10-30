@@ -64,64 +64,102 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Liquid Instruments builds **Moku** — software-defined, FPGA-reconfigurable test-and-measurement
-hardware (Moku:Go, Moku:Lab, Moku:Pro, Moku:Delta) that replaces a bench of traditional
-instruments with one device. Headquartered in San Diego, California, with offices in Canberra
-and Melbourne, Australia.
+Liquid Instruments builds Moku, a family of software-defined, FPGA-reconfigurable test-and-measurement hardware platforms (Moku:Go, Moku:Lab, Moku:Pro, Moku:Delta) that replace a bench of traditional instruments — oscilloscope, spectrum analyzer, waveform generator, lock-in amplifier, PID controller, phasemeter, laser lock box, logic analyzer, FIR/digital filter box, frequency response analyzer and more — with one reconfigurable device. Every Moku exposes a RESTful HTTP control API served by the device itself on the local network, wrapped by first-party Python, MATLAB and LabVIEW client libraries plus the MokuCLI command-line utility, and the company runs a hosted OpenID Connect identity service for Moku Cloud Compile and licensed feature access. The company was founded out of gravitational-wave detection research and is headquartered in San Diego, California with offices in Canberra and Melbourne, Australia.
 
-## The API surface
+**Areas:** Company · Test and Measurement · Instrumentation · Hardware · Oscilloscope · Spectrum Analyzer · Data Acquisition · FPGA · Photonics · Scientific Instruments · Electronics · Laboratory
 
-Two distinct surfaces were found and profiled (2026-08-04):
+## Liquid Instruments on APIs.io
 
-1. **Moku REST API** — a device-local HTTP control API. Each Moku serves its own API at
-   `http://<device-ip>/api/<group>/<action>`; there is **no vendor-hosted base URL**. Every
-   action is a `POST` of a JSON parameter object, authenticated with a `Moku-Client-Key`
-   session key minted by `POST /api/moku/claim_ownership`. Responses always return HTTP 200
-   with a `{success, code, messages, data}` envelope — failure is signalled in the body, not
-   the status line. Wrapped by first-party Python (PyPI `moku`), MATLAB and LabVIEW clients
-   plus the **MokuCLI** utility.
-   Docs: https://apis.liquidinstruments.com/api/
-2. **Liquid Instruments Identity** — a hosted OAuth 2.0 / OpenID Connect service at
-   `auth.liquidinstruments.com` backing `mokucli login`, Moku Cloud Compile and licensing. It
-   publishes a full OIDC discovery document and JWKS.
+Everything profiled for Liquid Instruments is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/liquid-instruments/](https://apis.io/providers/liquid-instruments/)** — or go straight to one of the APIs or properties below.
 
-## What is in this repo
+### APIs (2)
 
-| Directory | Artifact |
+- [Moku REST API](https://apis.io/apis/liquid-instruments/moku-rest-api/) — The Moku Scripting API is a RESTful HTTP interface served by the Moku device itself. A client first POSTs an empty JSON object to moku/claim_ownership to…
+- [Liquid Instruments Identity (OAuth 2.0 / OpenID Connect)](https://apis.io/apis/liquid-instruments/liquid-instruments-identity-oauth-20-openid-connect/) — The hosted identity service behind mokucli login, Moku Cloud Compile and licensed feature access. It publishes a full OpenID Connect discovery document at…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Liquid Instruments Authentication](https://apis.io/security/liquid-instruments/liquid-instruments-authentication/)
+- [Liquid Instruments Domain Security](https://apis.io/security/liquid-instruments/liquid-instruments-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Liquid Instruments Scopes](https://apis.io/scopes/liquid-instruments/liquid-instruments-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://liquidinstruments.com/)
+- [Documentation](https://apis.liquidinstruments.com/)
+- [Getting started](https://apis.liquidinstruments.com/api/getting-started/)
+- [API reference](https://apis.liquidinstruments.com/api/reference/)
+- [Pricing](https://store.liquidinstruments.com/)
+- [Sign up](https://liquidinstruments.com/my-account/)
+- [Support](https://liquidinstruments.com/support/contact/)
+- [Changelog](https://apis.liquidinstruments.com/api/changelog/)
+- [Blog](https://liquidinstruments.com/blog/)
+- [Terms of service](https://liquidinstruments.com/terms-of-use/)
+- [Privacy policy](https://liquidinstruments.com/privacy)
+- [GitHub](https://github.com/liquidinstruments)
+
+## API Evangelist rating
+
+**Kin Score 37.3** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| `authentication/` | Both auth surfaces — device client key + hosted OIDC |
-| `scopes/` | OIDC scopes read verbatim from live discovery |
-| `well-known/` | `/.well-known/` probe index + the OIDC discovery and JWKS documents |
-| `conventions/` | Transport, RPC style, response envelope, versioning, timeouts, streaming |
-| `errors/` | The error-code registry and HTTP failure modes |
-| `data-model/` | 22 operation groups / 522 operations, derived from the first-party client |
-| `lifecycle/` | Versioning, observed deprecations, support, status-page finding |
-| `changelog/` | Recent API releases |
-| `cli/` | The MokuCLI command surface |
-| `packages/` | First-party client libraries and where they live |
-| `conformance/` | Standards conformance, asserted only where observed |
-| `security/` | Probed TLS/DNS posture |
-| `llms/` | A generated `llms.txt` for this provider |
+| Discoverability | 66.1 |
+| Contract quality | 6.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 71.4 |
+| Access clarity | 44.7 |
 
-## Gaps worth closing (for Liquid Instruments)
+**Agent readiness 14.9** — agent-aware
 
-Everything below is a factual observation from the public surface on 2026-08-04, not a criticism
-of the hardware:
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
 
-- **No machine-readable contract.** No OpenAPI, Swagger, GraphQL SDL or AsyncAPI on any host.
-  The REST surface is real, uniform and well-suited to a spec — an OpenAPI generated from the
-  same source that produces the reference pages would make the whole surface agent-usable.
-- **Errors ride on HTTP 200.** Generic HTTP clients and agents cannot detect failure without
-  parsing the envelope, and the error-code strings (`INVALID_PARAM`, `NO_BIT_STREAM`, …) are
-  only enumerated inside the Python client source, not in the documentation.
-- **`status.liquidinstruments.com` is broken.** The hostname is provisioned and pointed at
-  UptimeRobot, but the TLS handshake fails, so no browser or agent can load it.
-- **No `security.txt`, no vulnerability-disclosure page, no trust centre**, and no published
-  compliance posture.
-- **No deprecation policy** despite shipping real breaking changes (zero-indexed Logic Analyzer
-  bits in 4.2.1, trigger-level defaults in 4.2.2, MokuCLI becoming mandatory in 4.0.1), and the
-  changelog carries no dates.
-- **No `llms.txt`, no MCP server, no A2A agent card.**
+**Regulatory alignment 34.3** — Horizontal (data, software, accessibility, platform)
 
-Secondary-market listing that surfaced this company:
-https://forgeglobal.com/liquid-instruments_stock/
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/liquid-instruments/](https://apis.io/providers/liquid-instruments/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Liquid Instruments: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/liquid-instruments/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
